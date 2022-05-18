@@ -1,18 +1,21 @@
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import auth from '../../firebase.init';
 
-const AddTaskModal = () => {
+const AddTaskModal = ({setTask ,refetch}) => {
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const [user, loading, error] = useAuthState(auth); 
 
     const onSubmit = data => {
         console.log(data)
-        fetch('https://rocky-tor-17555.herokuapp.com/task', {
+        fetch('http://localhost:5000/task', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data,email:user.email})
         })
             .then(res => res.json())
             .then(data => {
@@ -20,6 +23,8 @@ const AddTaskModal = () => {
 
                     console.log(data);
                     toast.success('Task added sucessfully')
+                    refetch();
+                    setTask(null)
                 }
             })
     };
