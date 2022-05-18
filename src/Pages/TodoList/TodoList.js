@@ -36,6 +36,9 @@ const TodoList = () => {
                     Add Task
                 </label>
             </div>
+            {
+                tasks.length === 0 && <h1 className='text-purple-700 font-bold text-3xl'>You have not added any task</h1>
+            }
             <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mx-2 md:mx-4 lg:mx-28'>
                 {
                     tasks?.map(task => <Task key={task._id} task={task} refetch={refetch}></Task>)
