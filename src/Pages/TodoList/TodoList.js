@@ -10,7 +10,12 @@ const TodoList = () => {
     const [task, setTask] = useState(null);
     const [user, loading, error] = useAuthState(auth);
     const { data: tasks, isLoading, refetch } = useQuery('tasks', () =>
-        fetch(`http://localhost:5000/task/${user.email}`)
+        fetch(`https://rocky-tor-17555.herokuapp.com/task/${user.email}`,{
+            method: 'GET',
+            headers:{
+                'authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
             .then(res => res.json()));
 
     if (isLoading) {
