@@ -1,6 +1,8 @@
+import { signOut } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
 import Task from '../Task/Task';
@@ -9,6 +11,7 @@ import AddTaskModal from './AddTaskModal';
 const TodoList = () => {
     const [task, setTask] = useState(null);
     const [user, loading, error] = useAuthState(auth);
+    const navigate= useNavigate();
     const { data: tasks, isLoading, refetch } = useQuery('tasks', () =>
         fetch(`https://rocky-tor-17555.herokuapp.com/task/${user.email}`,{
             method: 'GET',
@@ -16,7 +19,14 @@ const TodoList = () => {
                 'authorization' : `Bearer ${localStorage.getItem('accessToken')}`
             }
         })
-            .then(res => res.json()));
+        .then(res => {
+            if (res.status === 403 || res.status === 401) {
+              signOut(auth);
+              localStorage.removeItem("accessToken");
+              navigate("/login");
+            }
+            return res.json();
+          }));
 
     if (isLoading) {
         return <Loading />

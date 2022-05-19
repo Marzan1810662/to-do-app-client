@@ -54,7 +54,7 @@ const Task = ({ task, refetch }) => {
     }
     return (
         <div className="card lg:card-side bg-base-100 drop-shadow-xl bg-gray-50">
-            <div className="card-body">
+            <div className="card-body overflow-auto">
                 <div className={`${done || status ? 'line-through' : ''}`}>
                     <h2 className="card-title">{taskName}</h2>
                     <p className='text-left'>{taskDescription}</p>
